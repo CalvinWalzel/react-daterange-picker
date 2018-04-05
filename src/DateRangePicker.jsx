@@ -148,21 +148,25 @@ const DateRangePicker = React.createClass({
     let defs = Immutable.fromJS(stateDefinitions);
 
     dateStates.forEach(function(s) {
-      let r = s.range;
-      let start = r.start.startOf('day');
-      let end = r.end.startOf('day');
+      if (s.range) {
+        let r = s.range;
+        let start = r.start.startOf('day');
+        let end = r.end.startOf('day');
 
-      if (!dateCursor.isSame(start, 'day')) {
-        actualStates.push({
-          state: defaultState,
-          range: moment.range(
-            dateCursor,
-            start
-          ),
-        });
+        if (!dateCursor.isSame(start, 'day')) {
+          actualStates.push({
+            state: defaultState,
+            range: moment.range(
+              dateCursor,
+              start
+            ),
+          });
+        }
+        actualStates.push(s);
+        dateCursor = end;
+      } else if (s.lookup) {
+        actualStates.push(s);
       }
-      actualStates.push(s);
-      dateCursor = end;
     });
 
     actualStates.push({
@@ -176,9 +180,11 @@ const DateRangePicker = React.createClass({
     // sanitize date states
     return Immutable.List(actualStates).map(function(s) {
       let def = defs.get(s.state);
+      console.log(s.state, s, def);
       return Immutable.Map({
         range: s.range,
         state: s.state,
+        lookup: s.lookup,
         selectable: def.get('selectable', true),
         color: def.get('color'),
         className: def.get('className'),
@@ -191,7 +197,8 @@ const DateRangePicker = React.createClass({
   },
 
   isDateSelectable(date) {
-    return this.dateRangesForDate(date).some(r => r.get('selectable'));
+    console.log(this.dateRangesForDate(date));
+    return this.dateRangesForDate(date).every(r => r.get('selectable'));
   },
 
   nonSelectableStateRanges() {
@@ -199,7 +206,13 @@ const DateRangePicker = React.createClass({
   },
 
   dateRangesForDate(date) {
-    return this.state.dateStates.filter(d => d.get('range').contains(date));
+    return this.state.dateStates.filter((d) => {
+      if (d.get('range')) {
+        return d.get('range').contains(date);
+      } else if (d.get('lookup')) {
+        return d.get('lookup')(date);
+      }
+    });
   },
 
   sanitizeRange(range, forwards) {
@@ -207,7 +220,7 @@ const DateRangePicker = React.createClass({
      * with a non-selectable state. Using forwards to determine
      * which direction to work
      */
-    let blockedRanges = this.nonSelectableStateRanges().map(r => r.get('range'));
+    let blockedRanges = this.nonSelectableStateRanges().filter(r => r.get('range')).map(r => r.get('range'));
     let intersect;
 
     if (forwards) {
@@ -280,6 +293,7 @@ const DateRangePicker = React.createClass({
     let range;
     let forwards;
 
+    console.log(this.isDateSelectable(date));
     if (selectionType === 'range') {
       if (selectedStartDate) {
         datePair = Immutable.List.of(selectedStartDate, date).sortBy(d => d.unix());

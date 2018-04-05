@@ -150,12 +150,8 @@ const CalendarDate = React.createClass({
     let pending = isInHighlightedRange;
 
     let color;
-    let amColor;
-    let pmColor;
-    let classNames = [];
     let className;
     let states = dateRangesForDate(date);
-    let numStates = states.count();
     let cellStyle = {};
     let style = {};
 
@@ -177,41 +173,20 @@ const CalendarDate = React.createClass({
       highlightModifier = 'single';
     }
 
-    if (numStates === 1) {
-      // If there's only one state, it means we're not at a boundary
-      color = states.getIn([0, 'color']);
-      className = states.getIn([0, 'className']) || '';
+    // If there's only one state, it means we're not at a boundary
+    color = states.getIn([0, 'color']);
+    className = states.getIn([0, 'className']) || '';
+    console.log(className);
 
-      if (color) {
+    if (color) {
 
-        style = {
-          backgroundColor: color,
-        };
-        cellStyle = {
-          borderLeftColor: lightenDarkenColor(color, -10),
-          borderRightColor: lightenDarkenColor(color, -10),
-        };
-      }
-    } else {
-      amColor = states.getIn([0, 'color']);
-      pmColor = states.getIn([1, 'color']);
-      classNames.push(states.getIn([0, 'className']));
-      classNames.push(states.getIn([1, 'className']));
-
-      className = classNames.reduce((str, item) => {
-        if (item) {
-          !str ? str = item : str = `${str} ${item}`;
-        }
-        return str;
-      }, '');
-
-      if (amColor) {
-        cellStyle.borderLeftColor = lightenDarkenColor(amColor, -10);
-      }
-
-      if (pmColor) {
-        cellStyle.borderRightColor = lightenDarkenColor(pmColor, -10);
-      }
+      style = {
+        backgroundColor: color,
+      };
+      cellStyle = {
+        borderLeftColor: lightenDarkenColor(color, -10),
+        borderRightColor: lightenDarkenColor(color, -10),
+      };
     }
 
     return (
@@ -221,13 +196,7 @@ const CalendarDate = React.createClass({
         onMouseEnter={this.mouseEnter}
         onMouseLeave={this.mouseLeave}
         onMouseDown={this.mouseDown}>
-        {numStates > 1 &&
-          <div className={this.cx({element: "HalfDateStates"})}>
-            <CalendarDatePeriod period="am" color={amColor} />
-            <CalendarDatePeriod period="pm" color={pmColor} />
-          </div>}
-        {numStates === 1 &&
-          <div className={this.cx({element: "FullDateStates"})} style={style} />}
+        <div className={this.cx({element: "FullDateStates"})} style={style} />
         <span className={this.cx({element: "DateLabel"})}>{date.format('D')}</span>
         {selectionModifier ? <CalendarSelection modifier={selectionModifier} pending={pending} /> : null}
         {highlightModifier ? <CalendarHighlight modifier={highlightModifier} /> : null}

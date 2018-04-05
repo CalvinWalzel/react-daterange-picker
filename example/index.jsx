@@ -130,6 +130,14 @@ const Index = React.createClass({
           moment().add(3, 'weeks').add(5, 'days')
         ),
       },
+      {
+        state: 'unavailable',
+        lookup: (date) => {
+          return date.day() === 5;
+          // console.log(date);
+          // return true;
+        }
+      }
     ];
 
     const initialStart = moment().add(1, 'weeks').startOf('day');
