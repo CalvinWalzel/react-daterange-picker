@@ -234,7 +234,7 @@ var DateRangePicker = _react2['default'].createClass({
   },
 
   isDateSelectable: function isDateSelectable(date) {
-    return this.dateRangesForDate(date).some(function (r) {
+    return this.dateRangesForDate(date).every(function (r) {
       return r.get('selectable');
     });
   },
@@ -263,18 +263,19 @@ var DateRangePicker = _react2['default'].createClass({
 
     if (forwards) {
       intersect = blockedRanges.find(function (r) {
-        return range.intersect(r);
-      });
-      if (intersect) {
-        return _moment2['default'].range(range.start, intersect.start);
-      }
-    } else {
-      intersect = blockedRanges.findLast(function (r) {
-        return range.intersect(r);
+        return r.contains(range.end);
       });
 
       if (intersect) {
-        return _moment2['default'].range(intersect.end, range.end);
+        return _moment2['default'].range(range.start, intersect.start.clone().subtract(1, 'day'));
+      }
+    } else {
+      intersect = blockedRanges.find(function (r) {
+        return r.contains(range.start);
+      });
+
+      if (intersect) {
+        return _moment2['default'].range(intersect.end.clone().add(1, 'day'), range.end);
       }
     }
 

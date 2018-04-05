@@ -191,7 +191,7 @@ const DateRangePicker = React.createClass({
   },
 
   isDateSelectable(date) {
-    return this.dateRangesForDate(date).some(r => r.get('selectable'));
+    return this.dateRangesForDate(date).every(r => r.get('selectable'));
   },
 
   nonSelectableStateRanges() {
@@ -211,16 +211,17 @@ const DateRangePicker = React.createClass({
     let intersect;
 
     if (forwards) {
-      intersect = blockedRanges.find(r => range.intersect(r));
+      intersect = blockedRanges.find(r => r.contains(range.end));
+
       if (intersect) {
-        return moment.range(range.start, intersect.start);
+        return moment.range(range.start, intersect.start.clone().subtract(1, 'day'));
       }
 
     } else {
-      intersect = blockedRanges.findLast(r => range.intersect(r));
+      intersect = blockedRanges.find(r => r.contains(range.start));
 
       if (intersect) {
-        return moment.range(intersect.end, range.end);
+        return moment.range(intersect.end.clone().add(1, 'day'), range.end);
       }
     }
 
