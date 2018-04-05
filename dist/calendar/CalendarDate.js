@@ -232,7 +232,7 @@ var CalendarDate = _react2['default'].createClass({
 
       className = classNames.reduce(function (str, item) {
         if (item) {
-          !str ? str = item : str = str + ' ' + item;
+          str = !str ? item : str + ' ' + item;
         }
         return str;
       }, '');
