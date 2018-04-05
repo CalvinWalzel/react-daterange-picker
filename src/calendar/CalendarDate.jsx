@@ -200,7 +200,7 @@ const CalendarDate = React.createClass({
 
       className = classNames.reduce((str, item) => {
         if (item) {
-          !str ? str = item : str = `${str} ${item}`;
+          str = !str ? item : `${str} ${item}`;
         }
         return str;
       }, '');
