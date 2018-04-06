@@ -269,6 +269,7 @@ var DateRangePicker = _react2['default'].createClass({
       return r.get('range');
     });
     var intersect = undefined;
+    var sanitizedRange = range.clone();
 
     if (forwards) {
       intersect = blockedRanges.find(function (r) {
@@ -276,7 +277,7 @@ var DateRangePicker = _react2['default'].createClass({
       });
 
       if (intersect) {
-        return _moment2['default'].range(range.start, intersect.start.clone().subtract(1, 'day'));
+        sanitizedRange = _moment2['default'].range(range.start, intersect.start.clone().subtract(1, 'day'));
       }
     } else {
       intersect = blockedRanges.find(function (r) {
@@ -284,19 +285,19 @@ var DateRangePicker = _react2['default'].createClass({
       });
 
       if (intersect) {
-        return _moment2['default'].range(intersect.end.clone().add(1, 'day'), range.end);
+        sanitizedRange = _moment2['default'].range(intersect.end.clone().add(1, 'day'), range.end);
       }
     }
 
     if (range.start.isBefore(this.state.enabledRange.start)) {
-      return _moment2['default'].range(this.state.enabledRange.start, range.end);
+      sanitizedRange = _moment2['default'].range(this.state.enabledRange.start, range.end);
     }
 
     if (range.end.isAfter(this.state.enabledRange.end)) {
-      return _moment2['default'].range(range.start, this.state.enabledRange.end);
+      sanitizedRange = _moment2['default'].range(range.start, this.state.enabledRange.end);
     }
 
-    return range;
+    return sanitizedRange;
   },
 
   highlightRange: function highlightRange(range) {

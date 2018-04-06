@@ -218,31 +218,32 @@ const DateRangePicker = React.createClass({
      */
     let blockedRanges = this.nonSelectableStateRanges().map(r => r.get('range'));
     let intersect;
+    let sanitizedRange = range.clone();
 
     if (forwards) {
       intersect = blockedRanges.find(r => r.contains(range.end));
 
       if (intersect) {
-        return moment.range(range.start, intersect.start.clone().subtract(1, 'day'));
+        sanitizedRange = moment.range(range.start, intersect.start.clone().subtract(1, 'day'));
       }
 
     } else {
       intersect = blockedRanges.find(r => r.contains(range.start));
 
       if (intersect) {
-        return moment.range(intersect.end.clone().add(1, 'day'), range.end);
+        sanitizedRange = moment.range(intersect.end.clone().add(1, 'day'), range.end);
       }
     }
 
     if (range.start.isBefore(this.state.enabledRange.start)) {
-      return moment.range(this.state.enabledRange.start, range.end);
+      sanitizedRange = moment.range(this.state.enabledRange.start, range.end);
     }
 
     if (range.end.isAfter(this.state.enabledRange.end)) {
-      return moment.range(range.start, this.state.enabledRange.end);
+      sanitizedRange = moment.range(range.start, this.state.enabledRange.end);
     }
 
-    return range;
+    return sanitizedRange;
   },
 
   highlightRange(range) {
