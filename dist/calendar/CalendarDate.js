@@ -79,7 +79,16 @@ var CalendarDate = _react2['default'].createClass({
     };
   },
 
+  isMobile: function isMobile() {
+    return (/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)
+    );
+  },
+
   mouseUp: function mouseUp() {
+    if (this.isMobile()) {
+      return;
+    }
+
     this.props.onSelectDate(this.props.date);
 
     if (this.state.mouseDown) {
@@ -91,6 +100,10 @@ var CalendarDate = _react2['default'].createClass({
   },
 
   mouseDown: function mouseDown() {
+    if (this.isMobile()) {
+      return;
+    }
+
     this.setState({
       mouseDown: true
     });
@@ -98,6 +111,10 @@ var CalendarDate = _react2['default'].createClass({
   },
 
   touchEnd: function touchEnd() {
+    if (!this.isMobile()) {
+      return;
+    }
+
     this.props.onHighlightDate(this.props.date);
     this.props.onSelectDate(this.props.date);
 
@@ -110,6 +127,10 @@ var CalendarDate = _react2['default'].createClass({
   },
 
   touchStart: function touchStart(event) {
+    if (!this.isMobile()) {
+      return;
+    }
+
     event.preventDefault();
     this.setState({
       mouseDown: true
