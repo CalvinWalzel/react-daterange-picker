@@ -90,6 +90,10 @@ var CalendarDate = (0, _createReactClass2.default)({
     document.removeEventListener('mouseup', this.mouseUp);
     document.removeEventListener('touchend', this.touchEnd);
   },
+  isMobile: function isMobile() {
+    return (/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)
+    );
+  },
   mouseUp: function mouseUp() {
     if (this.isMobile()) {
       return;

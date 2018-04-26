@@ -56,6 +56,10 @@ const CalendarDate = createClass({
     document.removeEventListener('touchend', this.touchEnd);
   },
 
+  isMobile() {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent);
+  },
+
   mouseUp() {
     if (this.isMobile()) { return; }
 
