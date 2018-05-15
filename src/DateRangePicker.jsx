@@ -396,9 +396,9 @@ const DateRangePicker = createClass({
       return isSameYear && isMonthVisible;
     };
 
-    if (selectionType === 'single') {
-      return isVisible(value);
-    }
+    // if (selectionType === 'single') {
+    //   return isVisible(value);
+    // }
 
     return isVisible(value.start) || isVisible(value.end);
   },
