@@ -451,9 +451,9 @@ var DateRangePicker = (0, _createReactClass2.default)({
       return isSameYear && isMonthVisible;
     };
 
-    // if (selectionType === 'single') {
-    //   return isVisible(value);
-    // }
+    if (selectionType === 'single') {
+      return isVisible(value);
+    }
 
     return isVisible(value.start) || isVisible(value.end);
   },
