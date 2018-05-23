@@ -12,9 +12,9 @@ export const getYearMonthProps = function (props) {
     return undefined;
   }
 
-  // if (selectionType === 'single') {
-  //   return getYearMonth(value);
-  // }
-
-  return getYearMonth(props.value.start);
+  if (value._isAMomentObject) {
+    return getYearMonth(value);
+  } else {
+    return getYearMonth(props.value.start);
+  }
 };
