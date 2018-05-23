@@ -451,11 +451,11 @@ var DateRangePicker = (0, _createReactClass2.default)({
       return isSameYear && isMonthVisible;
     };
 
-    // if (selectionType === 'single') {
-    //   return isVisible(value);
-    // }
-
-    return isVisible(value.start) || isVisible(value.end);
+    if (value._isAMomentObject) {
+      return isVisible(value);
+    } else {
+      return isVisible(value.start) || isVisible(value.end);
+    }
   },
   canMoveBack: function canMoveBack() {
     if (this.getMonthDate().subtract(1, 'days').isBefore(this.state.enabledRange.start)) {
